@@ -78,11 +78,11 @@ export const IndexImageCard: React.FC = () => {
           height: { xs: 500, sm: 500, md: 750 },
           backgroundImage: `url(${images[currentIndex]})`,
           backgroundPosition: 'center',
-          backgroundSize: isZoomed ? '110%' : '100%',
+          backgroundSize: isZoomed ? '120%' : '100%',
           backgroundRepeat: 'no-repeat',
           borderRadius: 0,
           boxShadow: 5,
-          transition: 'background-image 0.5s ease-in-out',
+          transition: 'background-image 2s ease-in-out',
         }} 
       />
     </Box>

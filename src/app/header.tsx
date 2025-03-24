@@ -42,7 +42,7 @@ export default function Header() {
           <Typography variant="h6">Ukan29</Typography>
           <Box>
             {menuItems.map((item) => (
-              <Button key={item.name} sx={{ textTransform: "none", mx: 1 }}>
+              <Button key={item.name} sx={{ textTransform: "none", mx: { xs: 1, sm : 0.2}, color: 'burlywood' }}>
                 {item.name}
               </Button>
             ))}
@@ -80,7 +80,7 @@ export default function Header() {
           <Divider />
           <Box my={5}>
             {menuItems.map((item) => (
-              <Button key={item.name} fullWidth sx={{ textAlign: "left", my: 1, color: {xs: 'lightblue', md: 'whitesmoke'} }}>
+              <Button key={item.name} fullWidth sx={{ textAlign: "left", my: 1, color:  'burlywood' }}>
                 {item.name}
               </Button>
             ))}
@@ -102,7 +102,7 @@ export default function Header() {
           <Divider />
           <Box my={5} p={2.5} textAlign={'center'}>
             { authBarItems.map((item) => (
-              <Typography key={item.name} my={2}>
+              <Typography key={item.name} my={2} color="burlywood">
                 <Link href={item.href}>{item.name}</Link>
               </Typography>
             ))}
