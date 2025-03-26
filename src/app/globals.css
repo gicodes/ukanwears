@@ -86,6 +86,9 @@ a {
 
 .text-center { text-align: center;}
 
+.text-link { color: cornflowerblue;}
+.text-wheat { color: wheat;}
+
 .p-1 { padding: 1rem; }
 .p-2 { padding: 2rem; }
 

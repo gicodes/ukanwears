@@ -21,17 +21,17 @@ export const menuItems = [
   }
 ];
 
-export const authBarItems = [
-  {
-    name: "Login",
-    href: '/auth/login'
-  }, 
+export const authBarItems = [ 
   {
     name: "Register",
     href: '/auth/register'
   },
   {
-    name: "Logout",
-    href: '/auth/logout'
+    name: "Subscribe",
+    href: "/subscribe"
+  },
+  {
+    name: "Email Us",
+    href: "",
   }
 ]

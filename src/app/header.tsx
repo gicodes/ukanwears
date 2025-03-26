@@ -1,12 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import { AuthContext } from "@/contexts/auth/auth.context";
 import { authBarItems, menuItems } from "./utils/menu-items";
-import { AppBar, Toolbar, IconButton, Button, Typography, Drawer, Box, Divider, TextField, InputAdornment } from "@mui/material";
+import { AppBar, Toolbar, IconButton, Button, Typography, Drawer, Box, Divider, TextField, InputAdornment, Stack } from "@mui/material";
 import { Menu as MenuIcon, Search as SearchIcon, ShoppingCart, Close as CloseIcon, AccountCircle, Face } from "@mui/icons-material";
 
 export default function Header() {
+  const { user, logout } = useContext(AuthContext);
   const [menuOpen, setMenuOpen] = useState(false);
   const [authOpen, setAuthOpen] = useState(false);
 
@@ -14,35 +16,52 @@ export default function Header() {
   const toggleAuth = () => setAuthOpen(!authOpen);
 
   return (
-    <AppBar position="fixed" color="default" sx={{ boxShadow: 0, borderBottom: "0.1px solid #101010" }}>
-      <Toolbar sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", }}>
-        <Box minHeight={69} sx={{ display: { xs: "flex", sm: "none" }, alignItems: "center", width: "100%" }}>
-          <IconButton onClick={toggleMenu}>
-            <MenuIcon />
-          </IconButton>
-          <IconButton>
-            <SearchIcon />
-          </IconButton>
+    <AppBar position="fixed" color="default" 
+      sx={{ boxShadow: 0, borderBottom: "0.1px solid #101010" }}
+    >
+      <Toolbar 
+        sx={{  
+          alignItems: "center", 
+          display: "flex", justifyContent: "space-between",
+        }}
+      >
+        <Box 
+          minHeight={69} 
+          sx={{ 
+            display: { xs: "flex", sm: "none" }, 
+            alignItems: "center", 
+            width: "100%" 
+          }}
+        >
+          <Box>
+            <IconButton onClick={toggleMenu}> <MenuIcon /> </IconButton>
+            <IconButton> <SearchIcon /> </IconButton>
+          </Box>
+
           <Box sx={{ flexGrow: 1, display: "flex", justifyContent: "center" }}>
             <Typography variant="h6">
               <Link href={'/'}>Ukan29</Link>
             </Typography>
           </Box>
+
           <Box>
-            <IconButton>
-              <ShoppingCart />
-            </IconButton>
-            <IconButton onClick={toggleAuth}>
-              <AccountCircle />
-            </IconButton>
+            <IconButton> <ShoppingCart /> </IconButton>
+            <IconButton onClick={toggleAuth}> <AccountCircle /> </IconButton>
           </Box>
         </Box>
 
         <Box sx={{ display: { xs: "none", sm: "flex" }, alignItems: "center", justifyContent: "space-between", width: "100%" }}>
-          <Typography variant="h6">Ukan29</Typography>
+          <Typography variant="h6">              
+            <Link href={'/'}>Ukan29</Link>
+          </Typography>
+
           <Box>
             {menuItems.map((item) => (
-              <Button key={item.name} sx={{ textTransform: "none", mx: { xs: 1, sm : 0.2}, color: 'burlywood' }}>
+              <Button 
+                key={item.name} 
+                href={item.link}
+                sx={{ mx: { xs: 1, sm : 0.2}, color: 'burlywood' }}
+              >
                 {item.name}
               </Button>
             ))}
@@ -61,12 +80,9 @@ export default function Header() {
                 ),
               }}
             />
-            <IconButton>
-              <ShoppingCart />
-            </IconButton>
-            <IconButton onClick={toggleAuth}>
-              <AccountCircle />
-            </IconButton>
+
+            <IconButton> <ShoppingCart /> </IconButton>
+            <IconButton onClick={toggleAuth}> <AccountCircle /> </IconButton>
           </Box>
         </Box>
       </Toolbar>
@@ -76,11 +92,19 @@ export default function Header() {
           <IconButton onClick={toggleMenu} sx={{ position: "absolute", top: 16, right: 16 }}>
             <CloseIcon />
           </IconButton>
-          <Typography variant="h6" sx={{ my: 2 }} fontSize={'small'}> Menu </Typography>
+
+          <Typography variant="h6" my={1}>              
+            <Link href={'/'}>Ukan29</Link>
+          </Typography>
+
           <Divider />
-          <Box my={5}>
+          <Box mt={12}>
             {menuItems.map((item) => (
-              <Button key={item.name} fullWidth sx={{ textAlign: "left", my: 1, color:  'burlywood' }}>
+              <Button fullWidth 
+                key={item.name} 
+                href={item.link}
+                sx={{ textAlign: "left", my: 1, color: 'burlywood' }}
+              >
                 {item.name}
               </Button>
             ))}
@@ -101,11 +125,23 @@ export default function Header() {
           </Typography>
           <Divider />
           <Box my={5} p={2.5} textAlign={'center'}>
-            { authBarItems.map((item) => (
-              <Typography key={item.name} my={2} color="burlywood">
-                <Link href={item.href}>{item.name}</Link>
+            <Typography variant="subtitle2" mb={5}>
+              {user ? (<Stack>
+                  <Button onClick={logout}>Logout</Button>
+                  <Button href={"/profile"}>Profile</Button>
+                </Stack>)
+              : (<Link href={'/auth/login'}>Login</Link>)}
+            </Typography>
+              <Typography variant="caption" color="#909090"> 
+                ⸻ Actions as Guest ⸻ 
               </Typography>
-            ))}
+              <Box mt={4}>
+                { authBarItems.map((item) => (
+                <Typography fontSize={12} key={item.name} my={1} color="burlywood">
+                  <Link href={item.href}>{item.name}</Link>
+                </Typography>
+              ))}
+            </Box>
           </Box>
         </Box>
       </Drawer>

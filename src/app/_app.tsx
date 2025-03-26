@@ -1,21 +1,22 @@
 "use client";
 
 import CssBaseline from "@mui/material/CssBaseline";
+import { AuthProvider } from '../contexts/auth/auth.context';
+import { AlertProvider } from '@/contexts/alerts/alert.context';
+import { LoadingProvider } from '@/contexts/loading/loading.context';
+import { ProductProvider } from "@/contexts/product/product.context";
 import React, { useState, useMemo, useEffect, createContext } from "react";
 import { ThemeProvider, createTheme, PaletteMode } from "@mui/material/styles";
 
 export const ColorModeContext = createContext({ toggleColorMode: () => {} });
 
-interface MyAppProps {
-  children: React.ReactNode;
-}
-
-export default function MyApp({ children }: MyAppProps) {
+export default function MyApp({ children }: { children: React.ReactNode }) {
   const [mode, setMode] = useState<PaletteMode>("light");
 
   useEffect(() => {
     if (typeof window !== "undefined" && window.matchMedia) {
-      const preferredMode = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      const preferredMode = window.matchMedia("(prefers-color-scheme: dark)")
+      .matches ? "dark" : "light";
       setMode(preferredMode);
     }
   }, []);
@@ -32,7 +33,8 @@ export default function MyApp({ children }: MyAppProps) {
         palette: {
           mode,
           background: {
-            default: mode === "light" ? "var(--background-light)" : "var(--background-dark)",
+            default: mode === "light" 
+            ? "var(--background-light)" : "var(--background-dark)",
           },
         },
       }),
@@ -43,8 +45,17 @@ export default function MyApp({ children }: MyAppProps) {
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        {children}
+        <AuthProvider>
+          <LoadingProvider>
+            <AlertProvider>
+              <ProductProvider>
+                {children}
+              </ProductProvider>
+            </AlertProvider>
+          </LoadingProvider>
+        </AuthProvider>
       </ThemeProvider>
     </ColorModeContext.Provider>
   );
 }
+

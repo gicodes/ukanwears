@@ -87,7 +87,7 @@ export default function Footer() {
       <Box>
         <Typography
           variant="caption"
-          color='silver'
+          color='#909090'
           sx={{ textAlign: 'center', display: 'block' }}
         >
           © 2025 Ukan Wears. All rights reserved.

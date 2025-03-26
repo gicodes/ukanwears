@@ -1,11 +1,11 @@
 'use client';
 
+import { styled } from '@mui/material/styles';
 import React, { useEffect, useState } from "react";
-import { Box, Button, Card, Container, Pagination } from "@mui/material";
+import { Box, Button, Card, Typography } from "@mui/material";
 import { ChevronLeft, ChevronRight } from "@mui/icons-material";
 
 const images = [
-  'photo-1543163521-1bf539c55dd2.avif',
   'https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
   'https://images.unsplash.com/photo-1543163521-1bf539c55dd2?q=80&w=3560&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
 ];
@@ -54,12 +54,41 @@ export const IndexImageCard2 = () => {
   );
 };
 
+interface AnimatedCardProps {
+  image: string;
+}
+
+const AnimatedCard = styled(Box)<AnimatedCardProps>`
+  width: 100%;
+  min-width: 300px;
+  height: 500px;
+  background-image: url(${props => props.image});
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius: 0;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  transition: background-size 0.5s ease-in-out;
+  animation: zoomInOut 3s ease-in-out infinite alternate;
+
+  @keyframes zoomInOut {
+    from {
+      background-size: 100%;
+    }
+    to {
+      background-size: 111%;
+    }
+  }
+
+  &:hover {
+    animation-play-state: paused;
+    background-size: 115%;
+  }
+`;
+
 export const IndexImageCard: React.FC = () => {
-  const [isZoomed, setIsZoomed] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
-    setIsZoomed(true);
     const interval = setInterval(() => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
     }, 10000);
@@ -68,23 +97,8 @@ export const IndexImageCard: React.FC = () => {
   }, []);
 
   return (
-    <Box mt={{ sm: 1, mx: 0}}>
-      <Card 
-        sx={{
-          mx: 0,
-          width: '100%',
-          minWidth: 300,
-          position: 'relative',
-          height: { xs: 500, sm: 500, md: 750 },
-          backgroundImage: `url(${images[currentIndex]})`,
-          backgroundPosition: 'center',
-          backgroundSize: isZoomed ? '120%' : '100%',
-          backgroundRepeat: 'no-repeat',
-          borderRadius: 0,
-          boxShadow: 5,
-          transition: 'background-image 2s ease-in-out',
-        }} 
-      />
+    <Box>
+      <AnimatedCard image={images[currentIndex]} />
     </Box>
   );
 };

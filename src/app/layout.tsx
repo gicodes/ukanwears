@@ -1,8 +1,10 @@
 import MyApp from './_app';
-import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 import Header from './header';
+import type { Metadata } from 'next';
+import { Toolbar } from '@mui/material';
+import UserDisplayNudge from './index/ud-nudge';
+import { Geist, Geist_Mono } from 'next/font/google';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -29,6 +31,8 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <MyApp>
           <Header />
+          <Toolbar />
+          <UserDisplayNudge />
           {children}
         </MyApp>
       </body>

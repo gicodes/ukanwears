@@ -1,7 +1,8 @@
 import { Metadata } from 'next';
 import styles from "./page.module.css";
 import IndexFooter from './index/footer';
-import IndexImageCard from './utils/image-cards';
+import IndexImageCard from './index/image-cards';
+import FeaturedContainer from './index/featured-containers';
 
 export const generateMetadata = (): Metadata => {
   return {
@@ -15,7 +16,8 @@ export default function Home() {
     <div className={styles.page}>
       <IndexImageCard />
       <main className={styles.main}>
-        
+        <FeaturedContainer id={1} />
+        <FeaturedContainer id={2} />
       </main>
       <footer className={styles.footer}>
         <IndexFooter />
