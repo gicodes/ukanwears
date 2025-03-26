@@ -1,4 +1,5 @@
 import { Product } from '../../../types/product';
+import { NextResponse } from 'next/server';
 
 const mockProduct: Product[] = [
   {
@@ -33,10 +34,20 @@ const mockProduct: Product[] = [
   },
 ];
 
-export const fetchProducts = async (): Promise<Product[]> => {
+const fetchProducts = async (): Promise<Product[]> => {
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve(mockProduct);
     }, 1000);
   });
 };
+
+export async function GET(request: Request) {
+  try {
+    const products = await fetchProducts();
+    return NextResponse.json(products);
+  } catch (error) {
+    console.error('Login error:', error);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  }
+}

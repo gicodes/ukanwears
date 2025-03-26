@@ -1,5 +1,4 @@
 import { Product } from '../../types/product';
-import { fetchProducts } from '../../app/api/shop/route';
 import React, { createContext, useState, useEffect, useMemo } from 'react';
 
 interface ProductContextValue {
@@ -22,7 +21,12 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
   useEffect(() => {
     const loadProducts = async () => {
       try {
-        const data = await fetchProducts();
+        const response = await fetch('api/shop');
+        if (!response.ok) {
+          throw new Error('Failed to fetch products');
+        }
+        const data: Product[] = await response.json();
+
         setProducts(data);
       } catch (err) {
         setError(err instanceof Error ? err : new Error('Failed to fetch products'));
