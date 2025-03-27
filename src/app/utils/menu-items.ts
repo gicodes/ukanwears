@@ -24,11 +24,11 @@ export const menuItems = [
 export const authBarItems = [ 
   {
     name: "Register",
-    href: '/auth/register'
+    href: "/auth/register"
   },
   {
     name: "Subscribe",
-    href: "/subscribe"
+    href: "#"
   },
   {
     name: "Email Us",

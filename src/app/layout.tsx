@@ -1,8 +1,7 @@
-import MyApp from './_app';
 import './globals.css';
-import Header from './header';
+import MyApp from './_app';
 import type { Metadata } from 'next';
-import { Toolbar } from '@mui/material';
+import ConditionalHeader from './render';
 import UserDisplayNudge from './index/ud-nudge';
 import { Geist, Geist_Mono } from 'next/font/google';
 
@@ -30,8 +29,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <MyApp>
-          <Header />
-          <Toolbar />
+          <ConditionalHeader />
           <UserDisplayNudge />
           {children}
         </MyApp>

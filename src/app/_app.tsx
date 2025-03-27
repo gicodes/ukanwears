@@ -1,5 +1,7 @@
 "use client";
 
+import { AppProps } from 'next/app';
+import { SessionProvider } from "next-auth/react";
 import CssBaseline from "@mui/material/CssBaseline";
 import { AuthProvider } from '../contexts/auth/auth.context';
 import { AlertProvider } from '@/contexts/alerts/alert.context';
@@ -42,20 +44,22 @@ export default function MyApp({ children }: { children: React.ReactNode }) {
   );
 
   return (
-    <ColorModeContext.Provider value={colorMode}>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <AuthProvider>
-          <LoadingProvider>
-            <AlertProvider>
-              <ProductProvider>
-                {children}
-              </ProductProvider>
-            </AlertProvider>
-          </LoadingProvider>
-        </AuthProvider>
-      </ThemeProvider>
-    </ColorModeContext.Provider>
+    <SessionProvider session={null}>
+      <ColorModeContext.Provider value={colorMode}>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <AuthProvider>
+            <LoadingProvider>
+              <AlertProvider>
+                <ProductProvider>
+                  {children}
+                </ProductProvider>
+              </AlertProvider>
+            </LoadingProvider>
+          </AuthProvider>
+        </ThemeProvider>
+      </ColorModeContext.Provider>
+    </SessionProvider>
   );
 }
 

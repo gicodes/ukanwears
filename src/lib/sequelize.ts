@@ -1,6 +1,7 @@
 import { initProduct } from '@/models/Product.model';
 import { initUser } from '@/models/User.model';
 import { Sequelize } from 'sequelize';
+import pg from 'pg';
 
 const { 
   NEXT_PUBLIC_END_ENV,
@@ -16,15 +17,12 @@ const isProduction = NEXT_PUBLIC_END_ENV === 'production';
 async function initializeDatabase() {
   if (sequelize) return sequelize; 
 
-  sequelize = new Sequelize(`postgresql://
-    ${NEXT_PUBLIC_DB_USER}:
-    ${NEXT_PUBLIC_DB_PASS}@
-    ${NEXT_PUBLIC_DB_HOST}:
-    ${NEXT_PUBLIC_DB_PORT}
-    /postgres`, {
-    dialect: 'postgres',
-    logging: false,
-  });
+  sequelize = new Sequelize(`postgresql://${NEXT_PUBLIC_DB_USER}:${NEXT_PUBLIC_DB_PASS}@${NEXT_PUBLIC_DB_HOST}:${NEXT_PUBLIC_DB_PORT}/postgres`, 
+    {
+      dialect: 'postgres',
+      logging: false, 
+      dialectModule: pg, 
+    });
 
   try {
     await sequelize.authenticate();

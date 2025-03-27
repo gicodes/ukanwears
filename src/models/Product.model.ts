@@ -1,5 +1,4 @@
 import { DataTypes, Model, Sequelize } from 'sequelize';
-import sequelize from '../lib/sequelize';
 
 export class Product extends Model {
   public id!: string;
@@ -13,8 +12,6 @@ export class Product extends Model {
   public stock!: number;
   public purchased!: number;
   public saved!: number;
-  public createdAt!: Date;
-  public updatedAt!: Date;
 }
 
 export function initProduct(sequelize: Sequelize) {
@@ -50,28 +47,19 @@ export function initProduct(sequelize: Sequelize) {
         allowNull: false,
       },
       price: {
-        type: DataTypes.NUMBER,
-        allowNull: false,
+        type: DataTypes.DECIMAL(10, 2), 
+        allowNull: false
       },
       stock: {
-        type: DataTypes.NUMBER,
-        allowNull: false,
+        type: DataTypes.INTEGER, 
+        allowNull: false
       },
       purchased: {
-        type: DataTypes.NUMBER,
-        defaultValue: 0,
+        type: DataTypes.INTEGER, 
       },
       saved: {
-        type: DataTypes.NUMBER,
-        defaultValue: 0,
-      },
-      createdAt: {
-        type: DataTypes.DATE,
-        allowNull: false,
-      },
-      updatedAt: {
-        type: DataTypes.DATE,
-        allowNull: false,
+        type: DataTypes.INTEGER,
+        defaultValue: 0
       },
     },
     {

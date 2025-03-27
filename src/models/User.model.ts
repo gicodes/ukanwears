@@ -1,5 +1,4 @@
 import { DataTypes, Model, Sequelize } from 'sequelize';
-import sequelize from '../lib/sequelize';
 
 export class User extends Model {
   public id!: number;
@@ -7,6 +6,10 @@ export class User extends Model {
   public email!: string;
   public password!: string;
   public role!: string;
+  public country?: string;
+  public orders?: object;
+  public createdAt?: Date | string;
+  public updatedAt?: Date | string;
 }
 
 export function initUser(sequelize: Sequelize) {

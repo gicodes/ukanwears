@@ -4,17 +4,22 @@ import {
   Box, 
   Button,
   Checkbox,
+  FormControl,
   FormControlLabel,
   IconButton, 
   InputAdornment, 
+  InputLabel, 
+  MenuItem, 
+  Select, 
   TextField, 
   Typography 
 } from "@mui/material";
-import { useState, useContext } from "react";
 import { useRouter } from "next/navigation";
+import { useState, useContext } from "react";
+import { allCountries } from "@/assets/allCountries";
 import Visibility from "@mui/icons-material/Visibility";
-import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { TermsAndConsCard } from "@/app/terms-of-use/modal";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { isValidEmail, isValidPassword } from "../../utils/regex";
 import { AuthContext } from "../../../contexts/auth/auth.context";
 import { useLoading } from "../../../contexts/loading/use-loading";
@@ -130,15 +135,23 @@ export default function RegistrationForm() {
             margin="normal" 
             required 
           />
-          <TextField 
-            fullWidth 
-            label="Country of Residence" 
-            name="country" 
-            value={formData.country} 
-            onChange={handleChange} 
-            margin="normal" 
-            required 
-          />
+          <FormControl fullWidth>
+            <InputLabel>Country of Residence</InputLabel>
+            <Select
+              labelId="update-user-country-role-label"
+              id="update-user-country-role"
+              value={formData.country} required
+              label="Country of Residence"
+              onChange={(e) => setFormData((prev) => ({
+                ...prev,
+                country: e.target.value,
+              }))}
+            >
+              {allCountries.map((country: string) => 
+                <MenuItem key={country} value={country}>{country}</MenuItem>
+              )}
+            </Select>
+          </FormControl>
 
           <TextField
             fullWidth

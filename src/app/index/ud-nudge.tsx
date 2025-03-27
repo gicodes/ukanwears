@@ -1,13 +1,12 @@
 "use client";
 
-import { useContext } from "react";
 import { Box, Typography } from "@mui/material";
-import { AuthContext } from "../../contexts/auth/auth.context";
+import { useAuthSession } from "@/hooks/useAuthSession";
 
-export default function UserDisplayNudge() {
-  const { user } = useContext(AuthContext);
+export default function userASDisplayNudge() {
+  const { userAS } = useAuthSession() as { userAS: { name: string } | null };
 
-  if (!user) {
+  if (!userAS) {
     return null;
   }
 
@@ -15,10 +14,10 @@ export default function UserDisplayNudge() {
     <Box
       sx={{
         position: "fixed",
-        top: 64, 
+        top: 69, 
         left: "50%",
         transform: "translateX(-50%)",
-        maxWidth: 300,
+        maxWidth: 250,
         width: "90%",
         bgcolor: "rgba(0, 0, 0, 0.7)", 
         color: "white",
@@ -31,14 +30,14 @@ export default function UserDisplayNudge() {
       <Typography
         sx={{
           fontSize: {
-            xs: "8.8px",
-            sm: "9.5px",
-            md: "10px",
-            lg: "11px",
+            xs: 10,
+            sm: 11,
+            md: 11.5,
+            lg: 12,
           },
         }}
       >
-        Welcome, {user.name}
+        Welcome, {userAS?.name}
       </Typography>
     </Box>
   );

@@ -28,13 +28,15 @@ export default function LoginForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     startLoading();
-
     try {
-      login({
+      await login({
         email: formData.email,
         password: formData.password,
       });
-      router.push('/dashboard');
+      if (formData.email.includes('@ukanwears.com')){
+        router.push('/dashboard/admin/console');
+      } else router.push('/dashboard')
+      
     } catch (err: any) {
       addAlert(err.message || "Login failed", "error");
     } finally {

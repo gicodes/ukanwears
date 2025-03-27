@@ -13,7 +13,6 @@ export interface UserProps {
 interface UserLoginProps {
   email: string;
   password: string;
-  role?: string;
 }
 
 interface UserRegisterProps {
@@ -28,44 +27,57 @@ interface AuthContextType {
   user: UserProps | null;
   login: (credentials: UserLoginProps) => Promise<void>;
   register: (userData: UserRegisterProps) => Promise<void>;
-  logout: () => void;
+  logout: () => Promise<void>;
+  getToken: () => string | undefined;
 }
 
 export const AuthContext = createContext<AuthContextType>({
   user: null,
   login: async () => {},
   register: async () => {},
-  logout: () => {},
+  logout: async () => {},
+  getToken: () => undefined,
 });
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<UserProps | null>(null);
 
-  const fetchUserData = useCallback(async (token: string) => {
+  const fetchUserData = useCallback(async () => {
+    const token = Cookies.get('token');
+    if (!token) {
+      setUser(null);
+      return;
+    }
     try {
-      const response = await fetch('/api/user', {
+      const response = await fetch('/api/auth/session', {
+        method: 'GET',
+        credentials: 'include',
         headers: { Authorization: `Bearer ${token}` },
       });
       if (response.ok) {
-        const userData: UserProps = await response.json();
-        setUser(userData);
+        const data = await response.json();
+        if (data.user) {
+          setUser(data.user);
+        } else {
+          setUser(null);
+          Cookies.remove('token');
+        }
       } else {
-        Cookies.remove('token');
         setUser(null);
+        Cookies.remove('token');
       }
     } catch (error) {
-      console.error('Error fetching user:', error);
-      Cookies.remove('token');
+      console.error('Error fetching session:', error);
       setUser(null);
+      Cookies.remove('token');
     }
   }, []);
 
   useEffect(() => {
-    const token = Cookies.get('token');
-    if (token && !user) {
-      fetchUserData(token);
-    }
-  }, [fetchUserData, user]);
+    fetchUserData();
+  }, [fetchUserData]);
+
+  const getToken = useCallback(() => Cookies.get('token'), []);
 
   const login = useCallback(async (credentials: UserLoginProps) => {
     try {
@@ -73,48 +85,69 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         method: 'POST',
         body: JSON.stringify(credentials),
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
       });
+
       if (response.ok) {
-        const { token, user } = await response.json();
-        Cookies.set('token', token, { secure: true, sameSite: 'strict' });
-        setUser(user);
-        return user;
+        const data = await response.json();
+        if (data.token && data.user) {
+          Cookies.set('token', data.token, { secure: true, sameSite: 'strict' });
+          setUser(data.user);
+        } else {
+          throw new Error('Invalid server response');
+        }
       } else {
-        throw new Error('Login failed');
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Login failed');
       }
-    } catch (error) {
-      console.error(error);
+    } catch (error: any) {
+      console.error('Login error:', error);
       throw error;
     }
   }, []);
 
-  const register = useCallback(async (userData: UserProps) => {
+  const register = useCallback(async (userData: UserRegisterProps) => {
     try {
       const response = await fetch('/api/auth/register', {
         method: 'POST',
         body: JSON.stringify(userData),
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
       });
+
       if (response.ok) {
-        const { token, user }: { token: string; user: UserProps } = await response.json();
-        Cookies.set('token', token, { secure: true, sameSite: 'strict' });
-        setUser(user);
+        const data = await response.json();
+        if (data.token && data.user) {
+          Cookies.set('token', data.token, { secure: true, sameSite: 'strict' });
+          setUser(data.user);
+        } else {
+          throw new Error('Invalid server response');
+        }
       } else {
-        throw new Error('Registration failed');
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Registration failed');
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Registration error:', error);
       throw error;
     }
   }, []);
 
-  const logout = useCallback(() => {
-    Cookies.remove('token');
-    setUser(null);
+  const logout = useCallback(async () => {
+    try {
+      await fetch('/api/auth/logout', 
+        { method: 'POST', credentials: 'include' }
+      );
+    } catch (error) {
+      console.error('Logout error:', error);
+    } finally {
+      Cookies.remove('token');
+      setUser(null);
+    }
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, login, register, logout }}>
+    <AuthContext.Provider value={{ user, login, register, logout, getToken }}>
       {children}
     </AuthContext.Provider>
   );
