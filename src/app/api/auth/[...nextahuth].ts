@@ -2,14 +2,14 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import NextAuth from "next-auth";
-import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import User from "@/models/User.model";
+import CredentialsProvider from "next-auth/providers/credentials";
 
 const { JWT_SECRET } = process.env;
 
-export const authOptions = {
+export default NextAuth({
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -56,7 +56,4 @@ export const authOptions = {
   pages: {
     signIn: "/auth/signin"
   }
-};
-
-export const handler = NextAuth(authOptions);
-export { handler as GET, handler as POST };
+});
